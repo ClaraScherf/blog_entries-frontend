@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "16.x",
-    "npm": "8.x"
+    "node": "18.x",
+    "npm": "9.x"
   },
   "scripts": {
     "start": "vue-cli-service serve",
@@ -34,7 +34,7 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-vue": "^8.0.3",
+    "eslint-plugin-vue": "^7.0.0",
     "jest": "^27.0.5"
   },
   "description": "## Project setup ``` npm install ```",
