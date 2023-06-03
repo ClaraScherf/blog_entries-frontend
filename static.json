@@ -4,4 +4,8 @@
   "routes": {
     "/**": "index.html"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/main

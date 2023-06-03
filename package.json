@@ -2,12 +2,8 @@
   "name": "blog_entries-frontend",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "16.x",
-    "npm": "8.x"
-  },
   "scripts": {
-    "start": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
