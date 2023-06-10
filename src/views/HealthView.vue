@@ -13,10 +13,10 @@
     </thead>
     <tbody class="table-group-divider0" v-for="blog_entry in blog_entries" :key="blog_entry.id">
     <tr>
-      <th scope="row">{{ blog_entry.date }}</th>
+      <th scope="row">{{ formatDate(blog_entry.date) }}</th>
       <td>{{ blog_entry.calories }}</td>
       <td>{{ blog_entry.steps }}</td>
-      <td>{{ blog_entry.diary_entry }}</td>
+      <td>{{ blog_entry.diaryEntry }}</td>
       <td>{{ emoji(blog_entry.emojis) }}</td>
     </tr>
     </tbody>
@@ -25,13 +25,13 @@
 
 <script>
 
-
 export default {
   name: 'HealthView',
   data () {
     return {
       blog_entries: [
-        {
+
+        /* {
           id: 1,
           date: '01.06.2023',
           calories: 2500,
@@ -46,11 +46,15 @@ export default {
           steps: 4500,
           diary_entry: 'Top!',
           emojis: 2
-        }
+        } */
       ]
     }
   },
   methods: {
+    formatDate (dateArray) {
+      const [year, month, day] = dateArray
+      return `${day}.${month}.${year}`
+    },
     emoji (number) {
       switch (number) {
         case 0:
@@ -63,6 +67,20 @@ export default {
           return ''
       }
     }
+  },
+  mounted () {
+    const requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    }
+
+    fetch('http://localhost:8080/api/v1/blog-entries', requestOptions)
+      .then(response => response.json())
+      // eslint-disable-next-line camelcase
+      .then(result => result.forEach(blog_entry => {
+        this.blog_entries.push(blog_entry)
+      }))
+      .catch(error => console.log('error', error))
   }
 }
 </script>
