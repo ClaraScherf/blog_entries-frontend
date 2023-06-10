@@ -17,7 +17,7 @@
       <td>{{ blog_entry.calories }}</td>
       <td>{{ blog_entry.steps }}</td>
       <td>{{ blog_entry.diary_entry }}</td>
-      <td>{{ blog_entry.emojis }}</td>
+      <td>{{ emoji(blog_entry.emojis) }}</td>
     </tr>
     </tbody>
   </table>
@@ -25,7 +25,7 @@
 
 <script>
 
-// #TODO: Methode erstellen, um Emojis korrekt darzustellen;
+
 export default {
   name: 'HealthView',
   data () {
@@ -48,6 +48,20 @@ export default {
           emojis: 2
         }
       ]
+    }
+  },
+  methods: {
+    emoji (number) {
+      switch (number) {
+        case 0:
+          return '😄'
+        case 1:
+          return '😐'
+        case 2:
+          return '😔'
+        default:
+          return ''
+      }
     }
   }
 }
