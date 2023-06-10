@@ -29,25 +29,7 @@ export default {
   name: 'HealthView',
   data () {
     return {
-      blog_entries: [
-
-        /* {
-          id: 1,
-          date: '01.06.2023',
-          calories: 2500,
-          steps: 10000,
-          diary_entry: 'Top!',
-          emojis: 0
-        },
-        {
-          id: 2,
-          date: '02.06.2023',
-          calories: 2500,
-          steps: 4500,
-          diary_entry: 'Top!',
-          emojis: 2
-        } */
-      ]
+      blog_entries: []
     }
   },
   methods: {
