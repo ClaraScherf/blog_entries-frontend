@@ -17,7 +17,7 @@
       <td>{{ blog_entry.calories }}</td>
       <td>{{ blog_entry.steps }}</td>
       <td>{{ blog_entry.diaryEntry }}</td>
-      <td>{{ emojis(blog_entry.emoji) }}</td>
+      <td>{{ emoji(blog_entry.emojis) }}</td>
     </tr>
     </tbody>
   </table>
@@ -37,7 +37,7 @@ export default {
       const [year, month, day] = dateArray
       return `${day}.${month}.${year}`
     },
-    emojis (number) {
+    emoji (number) {
       switch (number) {
         case 0:
           return '😄'
