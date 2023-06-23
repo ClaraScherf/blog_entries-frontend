@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Hello World"/>
+    <HelloWorld msg="Tracke täglich deine Gesundheitsdaten"/>
+    <img alt="HealthBlog logo" src="../assets/logo.png" width="400" height="280">
     <CreateBlogEntry></CreateBlogEntry>
   </div>
 </template>
