@@ -1,33 +1,39 @@
 <template>
+  <form class="needs-validation" novalidate>
   <div class="container">
     <div class="mb-3">
-      <label for="date" class="form-label" required>Datum</label>
-      <input type="date" class="form-control" id="date" aria-describedby="date" required v-model="date">
-      <div class="invalid-feedback">Datum eintragen</div>
+      <label for="date" class="form-label">Datum:</label>
+      <input type="date" class="form-control" id="date" aria-describedby="date" v-model="date" required>
+      <div class="invalid-feedback">Datum eintragen.</div>
     </div>
     <div class="section">
       <label class="label">🍎 Kalorienaufnahme:</label>
-      <input v-model="calories" type="number" class="input">
+      <input v-model="calories" type="number" class="input" required>
+      <div class="invalid-feedback">Bitte Kalorien eintragen.</div>
     </div>
     <div class="section">
       <label class="label">🏃 Schrittanzahl:</label>
-      <input v-model="steps" type="number" class="input">
+      <input v-model="steps" type="number" class="input" required>
+      <div class="invalid-feedback">Bitte Schritte eintragen.</div>
     </div>
     <div class="section">
       <label class="label">😃 Emojis:</label>
-      <select v-model="emojis" class="dropdown">
+      <select v-model="emojis" class="dropdown" required>
         <option value="">Bitte wähle ein Emoji aus</option>
         <option value="0">😄</option>
         <option value="1">😐</option>
         <option value="2">😔</option>
       </select>
+      <div class="invalid-feedback">Bitte Emoji auswählen.</div>
     </div>
     <div class="section">
       <label class="label">📓 Tagebuch-Eintrag:</label>
-      <textarea v-model="diaryEntry" class="textarea"></textarea>
+      <textarea v-model="diaryEntry" class="textarea" required></textarea>
+      <div class="invalid-feedback">Bitte Tagebuch-Eintrag erfassen.</div>
     </div>
     <button @click="createBlogEntry" class="button">Eintrag erstellen</button>
   </div>
+  </form>
 </template>
 
 <style>
@@ -56,29 +62,51 @@ export default {
   },
   methods: {
     createBlogEntry () {
-      const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
+      const valid = this.validate()
+      if (valid) {
+        const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
 
-      const headers = new Headers()
-      headers.append('Content-Type', 'application/json')
+        const headers = new Headers()
+        headers.append('Content-Type', 'application/json')
 
-      const payload = JSON.stringify({
-        date: this.date,
-        steps: this.steps,
-        calories: this.calories,
-        emojis: this.emojis,
-        diaryEntry: this.diaryEntry
-      })
+        const payload = JSON.stringify({
+          date: this.date,
+          steps: this.steps,
+          calories: this.calories,
+          emojis: this.emojis,
+          diaryEntry: this.diaryEntry
+        })
 
-      const requestOptions = {
-        method: 'POST',
-        headers: headers,
-        body: payload,
-        redirect: 'follow'
+        const requestOptions = {
+          method: 'POST',
+          headers: headers,
+          body: payload,
+          redirect: 'follow'
+        }
+
+        fetch(endpoint, requestOptions)
+          .then(() => window.location.reload())
+          .catch(error => console.log('error', error))
       }
+    },
+    validate () {
+      let valid = true
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.needs-validation')
 
-      fetch(endpoint, requestOptions)
-        .then(() => window.location.reload())
-        .catch(error => console.log('error', error))
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            valid = false
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+      return valid
     }
   }
 }
