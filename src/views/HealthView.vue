@@ -21,16 +21,12 @@
     </tr>
     </tbody>
   </table>
-  <create-entry></create-entry>
 </template>
 
 <script>
 
-import CreateEntry from '@/components/CreateEntry.vue'
-
 export default {
   name: 'HealthView',
-  components: { CreateEntry },
   data () {
     return {
       blog_entries: []

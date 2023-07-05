@@ -1,30 +1,31 @@
 <template>
   <div class="container">
-    <div class="section">
-      <label class="label">🏃 Schrittanzahl:</label>
-      <input v-model="schrittScore" type="number" class="input">
+    <div class="mb-3">
+      <label for="date" class="form-label" required>Datum</label>
+      <input type="date" class="form-control" id="date" aria-describedby="date" required v-model="date">
+      <div class="invalid-feedback">Datum eintragen</div>
     </div>
-
     <div class="section">
       <label class="label">🍎 Kalorienaufnahme:</label>
-      <input v-model="caloriesToday" type="number" class="input">
+      <input v-model="calories" type="number" class="input">
     </div>
-
+    <div class="section">
+      <label class="label">🏃 Schrittanzahl:</label>
+      <input v-model="steps" type="number" class="input">
+    </div>
     <div class="section">
       <label class="label">😃 Emojis:</label>
-      <select v-model="selectedEmoji" class="dropdown">
+      <select v-model="emojis" class="dropdown">
         <option value="">Bitte wähle ein Emoji aus</option>
-        <option value="😄">😄</option>
-        <option value="😐">😐</option>
-        <option value="😔">😔</option>
+        <option value="0">😄</option>
+        <option value="1">😐</option>
+        <option value="2">😔</option>
       </select>
     </div>
-
     <div class="section">
       <label class="label">📓 Tagebuch-Eintrag:</label>
       <textarea v-model="diaryEntry" class="textarea"></textarea>
     </div>
-
     <button @click="createBlogEntry" class="button">Eintrag erstellen</button>
   </div>
 </template>
@@ -42,45 +43,44 @@
 
 <script>
 export default {
-  name: 'CreateBlogEntry',
+  name: 'CreateEntry',
   data () {
     return {
-      schrittScore: 0,
-      caloriesToday: '',
-      emoji: '',
-      diaryEntry: ''
+      date: '',
+      calories: '',
+      steps: '',
+      diaryEntry: '',
+      emojis: ''
     }
   },
   methods: {
-    async createBlogEntry () {
-      const myHeaders = new Headers()
-      myHeaders.append('Content-Type', 'application/json')
+    createEntry () {
+      const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
 
-      const raw = JSON.stringify({
-        schrittScore: parseInt(this.schrittScore),
-        caloriesToday: this.caloriesToday,
-        emoji: this.emoji,
+      const headers = new Headers()
+      headers.append('Content-Type', 'application/json')
+
+      const payload = JSON.stringify({
+        date: this.date,
+        steps: this.steps,
+        calories: this.calories,
+        emojis: this.emojis,
         diaryEntry: this.diaryEntry
       })
 
       const requestOptions = {
         method: 'POST',
-        headers: myHeaders,
-        body: raw,
+        headers: headers,
+        body: payload,
         redirect: 'follow'
       }
-      const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
+
       fetch(endpoint, requestOptions)
-        .then(response => response.text())
-        .then(result => window.location.reload())
         .catch(error => console.log('error', error))
-      console.log(this.schrittScore)
-      console.log(this.caloriesToday)
-      console.log(this.emoji)
-      console.log(this.diaryEntry)
     }
   }
 }
+
 </script>
 
 <style>
