@@ -29,6 +29,7 @@
     <button @click="createBlogEntry" class="button">Eintrag erstellen</button>
   </div>
 </template>
+
 <style>
 .label {
   font-size: 18px;
@@ -76,6 +77,7 @@ export default {
       }
 
       fetch(endpoint, requestOptions)
+        .then(() => window.location.reload())
         .catch(error => console.log('error', error))
     }
   }
