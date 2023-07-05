@@ -1,6 +1,6 @@
 <template>
-  <form class="needs-validation" novalidate>
   <div class="container">
+    <form class="needs-validation" id="blogentry-create-form" novalidate>
     <div class="mb-3">
       <label for="date" class="form-label">Datum:</label>
       <input type="date" class="form-control" id="date" aria-describedby="date" v-model="date" required>
@@ -32,8 +32,8 @@
       <div class="invalid-feedback">Bitte Tagebuch-Eintrag erfassen.</div>
     </div>
     <button @click="createBlogEntry" class="button">Eintrag erstellen</button>
+    </form>
   </div>
-  </form>
 </template>
 
 <style>
