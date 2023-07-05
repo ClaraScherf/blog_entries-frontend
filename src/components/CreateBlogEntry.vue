@@ -43,7 +43,7 @@
 
 <script>
 export default {
-  name: 'CreateEntry',
+  name: 'CreateBlogEntry',
   data () {
     return {
       date: '',
@@ -54,7 +54,7 @@ export default {
     }
   },
   methods: {
-    createEntry () {
+    createBlogEntry () {
       const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
 
       const headers = new Headers()
