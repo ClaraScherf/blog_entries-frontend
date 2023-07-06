@@ -4,9 +4,21 @@
   <table class="table">
     <thead>
     <tr>
-      <th scope="col">Datum</th>
-      <th scope="col">Kalorien</th>
-      <th scope="col">Schritte</th>
+      <th scope="col" @click="sortEntries('date')">
+        Datum
+        <i class="bi bi-caret-up-fill" :class="{ 'text-muted': !(sortKey === 'date' && sortOrder === 1) }"></i>
+        <i class="bi bi-caret-down-fill" :class="{ 'text-muted': !(sortKey === 'date' && sortOrder === -1) }"></i>
+      </th>
+      <th scope="col" @click="sortEntries('calories')">
+        Kalorien
+        <i class="bi bi-caret-up-fill" :class="{ 'text-muted': !(sortKey === 'calories' && sortOrder === 1) }"></i>
+        <i class="bi bi-caret-down-fill" :class="{ 'text-muted': !(sortKey === 'calories' && sortOrder === -1) }"></i>
+      </th>
+      <th scope="col" @click="sortEntries('steps')">
+        Schritte
+        <i class="bi bi-caret-up-fill" :class="{ 'text-muted': !(sortKey === 'steps' && sortOrder === 1) }"></i>
+        <i class="bi bi-caret-down-fill" :class="{ 'text-muted': !(sortKey === 'steps' && sortOrder === -1) }"></i>
+      </th>
       <th scope="col">Eintrag</th>
       <th scope="col">Emoji</th>
     </tr>
@@ -29,7 +41,9 @@ export default {
   name: 'HealthView',
   data () {
     return {
-      blog_entries: []
+      blog_entries: [],
+      sortKey: '',
+      sortOrder: 1
     }
   },
   methods: {
@@ -48,6 +62,27 @@ export default {
         default:
           return ''
       }
+    },
+    sortEntries (key) {
+      if (this.sortKey === key) {
+        this.sortOrder *= -1
+      } else {
+        this.sortOrder = 1
+      }
+      this.sortKey = key
+
+      this.blog_entries.sort((a, b) => {
+        if (key === 'date') {
+          const aDate = new Date(a[key][0], a[key][1] - 1, a[key][2])
+          const bDate = new Date(b[key][0], b[key][1] - 1, b[key][2])
+          return this.sortOrder * (aDate - bDate)
+          // eslint-disable-next-line brace-style
+        }
+        // Normale numerische Sortierung für 'calories' und 'steps'
+        else {
+          return this.sortOrder * (a[key] - b[key])
+        }
+      })
     }
   },
   mounted () {

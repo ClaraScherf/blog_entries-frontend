@@ -1,24 +1,24 @@
 <template>
   <div class="container">
-    <form class="needs-validation" id="blogentry-create-form" novalidate>
-    <div class="mb-3">
+    <form class="text-start needs-validation" novalidate id="blogentry-create-form">
+    <div class="section">
       <label for="date" class="form-label">Datum:</label>
-      <input type="date" class="form-control" id="date" aria-describedby="date" v-model="date" required>
-      <div class="invalid-feedback">Datum eintragen.</div>
+      <input type="date" class="form-control" id="date" v-model="date" required>
+      <div class="invalid-feedback">Bitte Datum eintragen.</div>
     </div>
     <div class="section">
       <label class="label">🍎 Kalorienaufnahme:</label>
-      <input v-model="calories" type="number" class="input" required>
+      <input v-model="calories" type="number" class="form-control" required>
       <div class="invalid-feedback">Bitte Kalorien eintragen.</div>
     </div>
     <div class="section">
       <label class="label">🏃 Schrittanzahl:</label>
-      <input v-model="steps" type="number" class="input" required>
+      <input v-model="steps" type="number" class="form-control" required>
       <div class="invalid-feedback">Bitte Schritte eintragen.</div>
     </div>
     <div class="section">
-      <label class="label">😃 Emojis:</label>
-      <select v-model="emojis" class="dropdown" required>
+      <label class="form-label">😃 Emojis:</label>
+      <select v-model="emojis" class="form-select" required>
         <option value="">Bitte wähle ein Emoji aus</option>
         <option value="0">😄</option>
         <option value="1">😐</option>
@@ -28,25 +28,24 @@
     </div>
     <div class="section">
       <label class="label">📓 Tagebuch-Eintrag:</label>
-      <textarea v-model="diaryEntry" class="textarea" required></textarea>
+      <textarea v-model="diaryEntry" class="form-control" required></textarea>
       <div class="invalid-feedback">Bitte Tagebuch-Eintrag erfassen.</div>
     </div>
-    <button @click="createBlogEntry" class="button">Eintrag erstellen</button>
+      <div v-if="this.serverValidationMessages">
+        <ul>
+          <li v-for="(message, index) in serverValidationMessages" :key="index" style="color: red">
+            {{ message }}
+          </li>
+        </ul>
+      </div>
+    <div class="section">
+    <button @click="createBlogEntry" id="button" class="button" type="submit">
+      <i class="bi bi-calendar-plus-fill"></i> Eintrag erstellen
+    </button>
+    </div>
     </form>
   </div>
 </template>
-
-<style>
-.label {
-  font-size: 18px;
-  margin-bottom: 8px;
-}
-
-.dropdown {
-  font-size: 16px;
-  padding: 8px;
-}
-</style>
 
 <script>
 export default {
@@ -57,11 +56,14 @@ export default {
       calories: '',
       steps: '',
       diaryEntry: '',
-      emojis: ''
+      emojis: '',
+      serverValidationMessages: []
     }
   },
+  emits: ['created'],
   methods: {
-    createBlogEntry () {
+    async createBlogEntry () {
+      this.serverValidationMessages = []
       const valid = this.validate()
       if (valid) {
         const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
@@ -84,9 +86,21 @@ export default {
           redirect: 'follow'
         }
 
-        fetch(endpoint, requestOptions)
-          .then(() => window.location.reload())
-          .catch(error => console.log('error', error))
+        const response = await fetch(endpoint, requestOptions)
+        await this.handleResponse(response)
+      }
+    },
+    async handleResponse (response) {
+      if (response.ok) {
+        this.$emit('created', response.headers.get('location'))
+        document.getElementById('button').click()
+      } else if (response.status === 400) {
+        response = await response.json()
+        response.errors.forEach(error => {
+          this.serverValidationMessages.push(error.defaultMessage)
+        })
+      } else {
+        this.serverValidationMessages.push('Unknown error occurred')
       }
     },
     validate () {
@@ -124,7 +138,7 @@ export default {
 .section {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 16px;
 }
 
@@ -133,19 +147,9 @@ export default {
   margin-bottom: 8px;
 }
 
-.input,
-.dropdown,
-.textarea {
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 .button {
   padding: 8px 16px;
-  font-size: 16px;
+  font-size: 18px;
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -156,4 +160,10 @@ export default {
 .button:hover {
   background-color: #0056b3;
 }
+
+.label {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
 </style>
