@@ -5,7 +5,16 @@ describe('HealthView.vue', () => {
   beforeEach(() => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ id: 1, date: [2023, 7, 5], calories: 500, steps: 10000, diaryEntry: 'Great day!', emojis: 0 }])
+        json: () => Promise.resolve([
+          {
+            id: 1,
+            date: [2023, 7, 5],
+            calories: 500,
+            steps: 10000,
+            diaryEntry: 'Great day!',
+            selected: false,
+            emojis: 0
+          }])
       })
     )
   })
@@ -46,7 +55,16 @@ describe('HealthView.vue', () => {
       wrapper.vm.$nextTick()
         .then(() => {
           expect(fetch).toHaveBeenCalledTimes(1)
-          expect(wrapper.vm.blog_entries).toEqual([{ id: 1, date: [2023, 7, 5], calories: 500, steps: 10000, diaryEntry: 'Great day!', emojis: 0 }])
+          expect(wrapper.vm.blog_entries).toEqual([
+            {
+              id: 1,
+              date: [2023, 7, 5],
+              calories: 500,
+              steps: 10000,
+              diaryEntry: 'Great day!',
+              selected: false,
+              emojis: 0
+            }])
 
           done() // Wir teilen Jest mit, dass wir mit dem Test fertig sind.
         })
