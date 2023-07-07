@@ -1,4 +1,5 @@
 <template>
+  <br>
   <div class="home">
     <HelloWorld msg="Tracke täglich deine Gesundheitsdaten"/>
     <img alt="HealthBlog logo" src="../assets/logo.png" width="400" height="280">

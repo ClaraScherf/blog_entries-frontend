@@ -1,4 +1,5 @@
 <template>
+  <br>
   <h1>Health Blog Einträge</h1>
   <br>
   <table class="table">
