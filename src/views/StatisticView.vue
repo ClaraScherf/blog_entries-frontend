@@ -2,36 +2,68 @@
   <div>
     <br>
     <h1>Statistiken</h1>
-    <div class="dashboard">
-      <div class="tile bg-primary">
-        <h4 class="text-white">Kalorien Gesamt</h4>
-        <p class="text-white">{{ formatNumber(totalCalories) }}</p>
+    <div class="top-container">
+      <div class="dashboard">
+        <div class="tile-row">
+          <div class="tile">
+            <div class="tile-content">
+              <h3>Kalorien</h3>
+              <h6>Gesamt</h6>
+            </div>
+            <div class="tile-data">
+            <p>{{ formatNumber(totalCalories) }}</p>
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-content">
+              <h3>Schritte</h3>
+              <h6>Gesamt</h6>
+            </div>
+            <div class="tile-data">
+            <p>{{ formatNumber(totalSteps) }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="tile-row">
+          <div class="tile">
+            <div class="tile-content">
+              <h3>Kalorien</h3>
+              <h6>Durchschnitt</h6>
+            </div>
+            <div class="tile-data">
+              <p>{{ formatNumber(averageCalories) }}</p>
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile-content">
+              <h3>Schritte</h3>
+              <h6>Durchschnitt</h6>
+            </div>
+            <div class="tile-data">
+              <p>{{ formatNumber(averageSteps) }}</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="tile bg-secondary">
-        <h4>Schritte Gesamt</h4>
-        <p>{{ formatNumber(totalSteps) }}</p>
-      </div>
-      <div class="tile bg-info">
-        <h4>Kalorien Durchschnitt</h4>
-        <p>{{ formatNumber(averageCalories) }}</p>
-      </div>
-      <div class="tile bg-success">
-        <h4>Schritte Durchschnitt</h4>
-        <p>{{ formatNumber(averageSteps) }}</p>
-      </div>
-    </div>
-    <div class="chart-container">
       <div class="chart-box">
         <div class="chart-header">
           <p>Prozentualer Anteil der Emojis</p>
         </div>
         <canvas ref="emojiChart"></canvas>
       </div>
-      <div class="chart-box">
+    </div>
+    <div class="chart-container">
+      <div class="bar-chart">
         <div class="chart-header">
           <p>Kalorien über Zeit</p>
         </div>
         <canvas ref="caloriesChart"></canvas>
+      </div>
+      <div class="bar-chart">
+        <div class="chart-header">
+          <p>Schritte über Zeit</p>
+        </div>
+        <canvas ref="stepsChart"></canvas>
       </div>
     </div>
   </div>
@@ -74,6 +106,7 @@ export default {
           this.calculateEmojiCounts(entries)
           this.renderEmojiChart()
           this.renderCaloriesChart()
+          this.renderStepsChart()
         })
         .catch((error) => {
           console.error('Fehler beim Abrufen der Einträge:', error)
@@ -98,7 +131,7 @@ export default {
     // erzeugt aus den Blog-Einträgen ein Diagramm, um die Emojis zu visualisieren
     renderEmojiChart () {
       const chartData = Object.values(this.emojiCounts)
-      const chartColors = ['#FF6384', '#36A2EB', '#FFCE56']
+      const chartColors = ['#cceebc', '#ffdca9', '#f7a4a4']
       const emojiLabels = ['😄', '😐', '😔']
 
       // erzeugt neues Chart-Objekt
@@ -140,7 +173,6 @@ export default {
       const ctx = this.$refs.caloriesChart.getContext('2d')
       const dates = this.blogEntries.map((entry) => this.formatDate(entry.date))
       const calories = this.blogEntries.map((entry) => entry.calories)
-      const maxCalories = Math.max(...calories) + 200
       // erzeugt neues Chart-Objekt
       // eslint-disable-next-line no-new
       new Chart(ctx, {
@@ -151,9 +183,7 @@ export default {
             {
               label: 'Aufgenommene Kalorien',
               data: calories,
-              backgroundColor: '#007bff'
-              // borderColor: 'rgba(75, 192, 192, 1)',
-              // borderWidth: 1
+              backgroundColor: '#f3aa60'
             }
           ]
         },
@@ -163,9 +193,38 @@ export default {
           scales: {
             yAxes: [{
               ticks: {
-                beginAtZero: true,
-                max: maxCalories,
-                stepSize: 300
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      })
+    },
+    renderStepsChart () {
+      const ctx = this.$refs.stepsChart.getContext('2d')
+      const dates = this.blogEntries.map((entry) => this.formatDate(entry.date))
+      const steps = this.blogEntries.map((entry) => entry.steps)
+      // erzeugt neues Chart-Objekt
+      // eslint-disable-next-line no-new
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: dates,
+          datasets: [
+            {
+              label: 'Schritte',
+              data: steps,
+              backgroundColor: '#8cc0de'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
               }
             }]
           }
@@ -196,42 +255,56 @@ export default {
 </script>
 
 <style scoped>
+.top-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .dashboard {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 45%;
+}
+
+.tile-row {
+  display: flex;
+  justify-content: space-around;
 }
 
 .tile {
   flex: 1;
+  display: flex;
   padding: 20px;
   margin: 10px;
   text-align: center;
+  align-items: stretch;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(40, 44, 52, 0.05); /* Hintergrundfarbe geändert */
+  color: #2c3e50; /* Schriftfarbe geändert */
 }
 
-.bg-primary {
-  background-color: #007bff;
+.tile-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.bg-secondary {
-  background-color: #6c757d;
-}
-
-.bg-info {
-  background-color: #17a2b8;
-}
-
-.bg-success {
-  background-color: #28a745;
-}
-
-.text-white {
-  color: #fff;
+.tile-data {
+  display: flex;
+  font-size: 2em;
+  font-weight: 800;
+  justify-content: center;
+  align-items: center;
 }
 
 .chart-header {
   text-align: center;
-  font-size: 20px;
+  font-size: 25px;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
@@ -242,6 +315,11 @@ export default {
 }
 
 .chart-box {
+  width: 50%;
+  padding: 50px;
+}
+
+.bar-chart {
   width: 50%;
   padding: 50px;
 }

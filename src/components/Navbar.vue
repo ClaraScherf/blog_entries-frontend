@@ -24,5 +24,10 @@ export default {
 </script>
 
 <style scoped>
+.navbar-brand {
+  font-size: 30px;
+  font-weight: bold;
+  color: #1e2836;
+}
 
 </style>
