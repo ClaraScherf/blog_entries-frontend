@@ -1,4 +1,3 @@
-#Formular zur Erstellung eines Blogeintrags
 <template>
   <div class="container">
     <form class="text-start needs-validation" novalidate id="blogentry-create-form">
