@@ -45,8 +45,8 @@ export default {
   data () {
     return {
       blogEntries: [],
-      sortKey: '',
-      sortOrder: -1
+      sortKey: 'date',
+      sortOrder: 1
     }
   },
   watch: {
@@ -59,26 +59,32 @@ export default {
     }
   },
   async created () {
-    const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
-    const requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    }
+    await this.fetchBlogEntries()
+  },
+  methods: {
+    async fetchBlogEntries () {
+      const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
+      const requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      }
 
-    fetch(endpoint, requestOptions)
-      .then(response => response.json())
-      .then(result => {
+      try {
+        const response = await fetch(endpoint, requestOptions)
+        const result = await response.json()
+
         // eslint-disable-next-line camelcase
         result.forEach(blog_entry => {
           blog_entry.selected = false
           this.blogEntries.push(blog_entry)
         })
-        this.sortEntries('date')
+
+        this.sortEntries(this.sortKey)
         this.$emit('loaded-entries', this.blogEntries)
-      })
-      .catch(error => console.log('error', error))
-  },
-  methods: {
+      } catch (error) {
+        console.log('error', error)
+      }
+    },
     formatDate (date) {
       const parsedDate = new Date(date)
       const day = parsedDate.getDate().toString().padStart(2, '0')
