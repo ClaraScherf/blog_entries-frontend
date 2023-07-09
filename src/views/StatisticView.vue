@@ -171,8 +171,12 @@ export default {
       return `${day}.${month}.${year}`
     },
     formatNumber (number) {
-      return number.toLocaleString('de-DE', {
-        maximumFractionDigits: 2
+      const isWholeNumber = number % 1 === 0
+      const roundedNumber = Math.round(number * 10) / 10
+
+      return roundedNumber.toLocaleString('de-DE', {
+        maximumFractionDigits: isWholeNumber ? 0 : 2,
+        minimumFractionDigits: isWholeNumber ? 0 : 2
       })
     }
   }
