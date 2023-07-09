@@ -39,9 +39,9 @@
 
 <script>
 import Chart from 'chart.js'
-
+// Endpunkt des API-Backends
 const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
-
+// Definiert die Daten
 export default {
   data () {
     return {
@@ -53,15 +53,17 @@ export default {
       blogEntries: []
     }
   },
+  // Abruf der Blog-Einträge
   mounted () {
     this.fetchBlogEntries()
   },
+  // ruft die Blog-Einträge über den Endpunkt ab
   methods: {
     fetchBlogEntries () {
       fetch(endpoint)
         .then((response) => response.json())
         .then((entries) => {
-          // Sort entries by date in ascending order
+          // Sortiert die Einträge nach Datum aufsteigend
           entries.sort((a, b) => new Date(a.date) - new Date(b.date))
 
           this.blogEntries = entries
@@ -77,23 +79,29 @@ export default {
           console.error('Fehler beim Abrufen der Einträge:', error)
         })
     },
+    // zählt die Häufigkeit der Emojis
     calculateEmojiCounts (entries) {
       this.emojiCounts = {
         0: 0,
         1: 0,
         2: 0
       }
+      // durchläuft jeden Blog-Eintrag(entries)
       entries.forEach((entry) => {
+        // prüft ob der Emoji in EmojiCount enthalten ist
         if (entry.emojis in this.emojiCounts) {
+          // Wenn ja, erhöht um 1
           this.emojiCounts[entry.emojis]++
         }
       })
     },
+    // erzeugt aus den Blog-Einträgen ein Diagramm, um die Emojis zu visualisieren
     renderEmojiChart () {
       const chartData = Object.values(this.emojiCounts)
       const chartColors = ['#FF6384', '#36A2EB', '#FFCE56']
       const emojiLabels = ['😄', '😐', '😔']
 
+      // erzeugt neues Chart-Objekt
       // eslint-disable-next-line no-new
       new Chart(this.$refs.emojiChart.getContext('2d'), {
         type: 'pie',
@@ -127,12 +135,13 @@ export default {
         }
       })
     },
+    // erzeugt aus den Blog-Einträgen ein Diagramm, um Kalorienwerte zu visualisieren
     renderCaloriesChart () {
       const ctx = this.$refs.caloriesChart.getContext('2d')
       const dates = this.blogEntries.map((entry) => this.formatDate(entry.date))
       const calories = this.blogEntries.map((entry) => entry.calories)
       const maxCalories = Math.max(...calories) + 200
-
+      // erzeugt neues Chart-Objekt
       // eslint-disable-next-line no-new
       new Chart(ctx, {
         type: 'bar',
@@ -163,6 +172,7 @@ export default {
         }
       })
     },
+    // Datum im Format TT.MM.JJJJ
     formatDate (date) {
       const parsedDate = new Date(date)
       const day = parsedDate.getDate().toString().padStart(2, '0')
@@ -170,6 +180,7 @@ export default {
       const year = parsedDate.getFullYear()
       return `${day}.${month}.${year}`
     },
+    // Formartiert Zahlen mit max. 2 Dezimalstellen
     formatNumber (number) {
       const isWholeNumber = number % 1 === 0
       const roundedNumber = Math.round(number * 10) / 10
@@ -181,6 +192,7 @@ export default {
     }
   }
 }
+// CSS
 </script>
 
 <style scoped>

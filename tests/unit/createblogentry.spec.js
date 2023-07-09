@@ -7,7 +7,7 @@ describe('CreateBlogEntry', () => {
   beforeEach(() => {
     wrapper = mount(CreateBlogEntry)
   })
-
+  // überprüft anhand der ID oder Datentyp ob Elemente im DOM existieren
   test('renders form correctly', () => {
     expect(wrapper.find('#blogentry-create-form').exists()).toBe(true)
     expect(wrapper.find('#date').exists()).toBe(true)
@@ -15,7 +15,7 @@ describe('CreateBlogEntry', () => {
     expect(wrapper.find('select').exists()).toBe(true)
     expect(wrapper.find('textarea').exists()).toBe(true)
   })
-
+  // überprüft, ob die Eingabewerte von der Komponente erfasst werden
   test('binds input values correctly', async () => {
     await wrapper.find('#date').setValue('2023-07-05')
     await wrapper.find('input[type="number"]').setValue(1200)

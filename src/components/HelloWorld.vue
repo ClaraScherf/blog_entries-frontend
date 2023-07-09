@@ -5,6 +5,7 @@
 </template>
 
 <script>
+// Zuweisung eines Namens, Definition des Props
 export default {
   name: 'HelloWorld',
   props: {

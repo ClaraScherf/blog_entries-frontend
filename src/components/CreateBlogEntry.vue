@@ -1,3 +1,4 @@
+#Formular zur Erstellung eines Blogeintrags
 <template>
   <div class="container">
     <form class="text-start needs-validation" novalidate id="blogentry-create-form">
@@ -46,8 +47,8 @@
     </form>
   </div>
 </template>
-
 <script>
+// Validert das Formular, erstellt Payload-Objekt mit den eingegebenen Daten und sendet eine POST-Anfrage an den angegebenen API-Endpunkt
 export default {
   name: 'CreateBlogEntry',
   data () {
@@ -90,6 +91,7 @@ export default {
         await this.handleResponse(response)
       }
     },
+    // Verarbeitet die Serverantwort, wenn erfolgreich dann wird das Ereignis 'created' emittiert
     async handleResponse (response) {
       if (response.ok) {
         this.$emit('created', response.headers.get('location'))
@@ -103,6 +105,7 @@ export default {
         this.serverValidationMessages.push('Unknown error occurred')
       }
     },
+    // Validierung des Formulars
     validate () {
       let valid = true
       // Fetch all the forms we want to apply custom Bootstrap validation styles to
