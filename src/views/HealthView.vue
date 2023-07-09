@@ -52,11 +52,13 @@ export default {
       sortOrder: 1
     }
   },
+  // nimmt das Array der Datumsinformationen und gibt das formartierte Datum zurück
   methods: {
     formatDate (dateArray) {
       const [year, month, day] = dateArray
       return `${day}.${month}.${year}`
     },
+    // nimmt eine Zahl entgegen und gibt das entsprechende Emoji zurück
     emoji (number) {
       switch (number) {
         case 0:
@@ -69,6 +71,7 @@ export default {
           return ''
       }
     },
+    // sortiert Einträge nach der Sortierrichtung
     sortEntries (key) {
       if (this.sortKey === key) {
         this.sortOrder *= -1
@@ -90,14 +93,17 @@ export default {
         }
       })
     },
+    // sendet für den ausgewählten Eintrag eine DELETE-Anfrage an den Server
     async deleteSelectedEntries () {
+      // iteriert über das blog_entries Array
       for (const entry of this.blog_entries) {
+        // für jeden ausgewählten Eintrag wird ein requestOptions Objekt für eine DELETE Anfrage erstellt
         if (entry.selected) {
           const requestOptions = {
             method: 'DELETE',
             redirect: 'follow'
           }
-
+          // mit fetch wird eine DELETE-Anfrage an die API-URL gesendet
           await fetch(process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries/' + entry.id, requestOptions)
             .then(response => {
               if (!response.ok) {
@@ -112,13 +118,14 @@ export default {
       this.blog_entries = this.blog_entries.filter(entry => !entry.selected)
     }
   },
+  // zeigt die Blog-Einträge nach dem Laden der Komponente an und sortiert sie nach dem Datum
   mounted () {
     const endpoint = process.env.VUE_APP_BACKEND_BASE_URL + '/api/v1/blog-entries'
     const requestOptions = {
       method: 'GET',
       redirect: 'follow'
     }
-
+    // GET-Anfrage wird an API Endpunkt geschickt
     fetch(endpoint, requestOptions)
       .then(response => response.json())
       .then(result => {
