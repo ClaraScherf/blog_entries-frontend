@@ -36,7 +36,7 @@ describe('HealthView.vue', () => {
   // überprüft, ob formatDate richtig formartiert ist
   it('formats date correctly', () => {
     const wrapper = shallowMount(HealthView)
-    expect(wrapper.vm.formatDate([2023, 7, 5])).toEqual('5.7.2023')
+    expect(wrapper.vm.formatDate([2023, 7, 5])).toEqual('05.07.2023')
   })
   // überprüft, ob das richtige Emoji zurückgegeben wird
   it('returns correct emoji', () => {
